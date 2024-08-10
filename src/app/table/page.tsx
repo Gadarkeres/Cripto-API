@@ -2,15 +2,16 @@ import { TableData } from "@/components/components-person/table-data";
 import { criptoDataResponse } from "@/components/models/criptoData";
 
 async function getCryptoData(): Promise<criptoDataResponse[]> {
+  const page = 1;
+  const limit = 10;
   const res = await fetch(
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl"
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl&page=${page}&per_page=${limit}`
   );
   if (!res.ok) {
     throw new Error("Falha ao buscar dados");
   }
 
   // atraso
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   const data = await res.json();
   return data;
 }
