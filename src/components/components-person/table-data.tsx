@@ -155,7 +155,6 @@ const TableData = ({ data }: { data: criptoDataResponse[] }) => {
                   {page}
                 </PaginationLink>
               </PaginationItem>
-
               <PaginationItem>
                 <PaginationNext onClick={nextPage} href="#" />
               </PaginationItem>
