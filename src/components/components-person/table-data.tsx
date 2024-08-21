@@ -26,15 +26,20 @@ import {
 import { useTableHook } from "./table-data-hook";
 
 const TableData = ({ data }: { data: criptoDataResponse[] }) => {
-  const { formatDate, redirect } = useTableHook();
-  const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [filtedData, setFiltedData] = useState<any>();
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [cache, setCache] = useState<{ [key: number]: criptoDataResponse[] }>(
-    {}
-  );
-  const crypoService = useCryptoService();
+  const {
+    formatDate,
+    redirect,
+    page,
+    setPage,
+    loading,
+    value,
+    nextPage,
+    previusPage,
+    setValue,
+    setFiltedData,
+    filtedData,
+    changePage
+  } = useTableHook();
 
   useEffect(() => {
     setTimeout(() => {
@@ -48,42 +53,9 @@ const TableData = ({ data }: { data: criptoDataResponse[] }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  const previusPage = () => {
-    setValue("");
-    if (page == 1 || loading) return;
-    else setPage(page - 1);
-  };
-
-  const nextPage = () => {
-    setValue("");
-    if (page == 4 || loading) return;
-    else setPage(page + 1);
-  };
-
   useEffect(() => {
-    if (cache[page]) {
-      setFiltedData(cache[page]);
-      setLoading(false);
-    } else {
-      setLoading(true);
-      const fetchData = async () => {
-        try {
-          const response = await crypoService.getCryptoData(page);
-          setCache((prevCache) => ({ ...prevCache, [page]: response }));
-          setFiltedData(response);
-        } catch (error) {
-          alert(
-            "Plano de consumo da api excedido. Tente novamente mais tarde." +
-              error
-          );
-          setPage(1);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    changePage();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <>
@@ -98,6 +70,7 @@ const TableData = ({ data }: { data: criptoDataResponse[] }) => {
               onChange={(e) => setValue(e.target.value)}
             />
           </div>
+          <div></div>
           <Table>
             <TableCaption>Tabela de criptomoedas</TableCaption>
             <TableHeader>
