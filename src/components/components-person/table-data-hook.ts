@@ -3,6 +3,7 @@ import { func } from "prop-types";
 import { useState } from "react";
 import { criptoDataResponse } from "../models/criptoData";
 import useCryptoService from "@/services/ctypodate.service";
+import { toast } from "sonner";
 
 export const useTableHook = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
@@ -52,9 +53,10 @@ export const useTableHook = () => {
           setCache((prevCache) => ({ ...prevCache, [page]: response }));
           setFiltedData(response);
         } catch (error) {
-          alert(
+          toast(
             "Plano de consumo da api excedido. Tente novamente mais tarde." +
-              error
+              error,
+            { duration: 2000 }
           );
           setPage(1);
         } finally {
